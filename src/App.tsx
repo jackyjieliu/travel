@@ -1,5 +1,7 @@
 import * as React from 'react';
 import './App.css';
+import { connect } from 'react-redux';
+import { State } from './reducers';
 
 const logo = require('./logo.svg');
 
@@ -19,4 +21,13 @@ class App extends React.Component {
   }
 }
 
-export default App;
+function mapStateToProps(store: State) {
+  return {
+  };
+}
+
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

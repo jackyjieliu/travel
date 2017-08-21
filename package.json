@@ -4,11 +4,18 @@
   "private": true,
   "dependencies": {
     "@types/jest": "^20.0.7",
+    "@types/lodash": "^4.14.73",
     "@types/node": "^8.0.24",
     "@types/react": "^16.0.2",
     "@types/react-dom": "^15.5.3",
+    "@types/react-redux": "^5.0.4",
+    "lodash": "^4.17.4",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-observable": "^0.16.0",
+    "rxjs": "^5.4.3"
   },
   "devDependencies": {
     "react-scripts-ts": "2.6.0"
