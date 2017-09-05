@@ -1,33 +1,30 @@
 import * as React from 'react';
 import './App.css';
-import { connect } from 'react-redux';
-import { State } from './reducers';
+import { Switch, Route } from 'react-router-dom';
+import LandingScreen from './screens/LandingScreen';
+import SearchResultScreen from './screens/SearchResultScreen';
+import DestinationDetail from './screens/DestinationDetailScreen';
+import Header from './components/Header';
 
-const logo = require('./logo.svg');
+const bodyWrapper = (Component: React.ComponentClass) => {
+  return () => (
+    <div style={{ maxWidth: 760, marginLeft: 'auto', marginRight: 'auto', marginTop: 24, marginBottom: 24  }}>
+      <Component />
+    </div>
+  );
+};
 
-class App extends React.Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+const App = () => {
+  return (
+    <div className="App">
+      <Header/>
+      <Switch>
+        <Route exact={true} path="/" component={LandingScreen}/>
+        <Route path="/search" component={bodyWrapper(SearchResultScreen)}/>
+        <Route path="/destination" component={bodyWrapper(DestinationDetail)}/>
+      </Switch>
+    </div>
+  );
+};
 
-function mapStateToProps(store: State) {
-  return {
-  };
-}
-
-function mapDispatchToProps(dispatch: Dispatch) {
-  return {};
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

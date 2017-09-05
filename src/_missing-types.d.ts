@@ -1,7 +1,7 @@
+declare var anyType: any;
 
-type Dispatch = (a: Action) => void;
+type Dispatch = (a: { type: string; payload: any; }) => void;
 
-interface Action {
-  type: string;
-  payload: any;
+declare module 'material-ui-search-bar' {
+  export default anyType;
 }
