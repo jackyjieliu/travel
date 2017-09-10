@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { State } from '../reducers';
+import { State } from '../reducers/state';
 import SearchBarComponent from '../components/SearchBarComponent';
 import { withRouter } from 'react-router-dom';
 

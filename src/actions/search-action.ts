@@ -67,14 +67,16 @@ export interface UpdateSearchResult {
   type: 'UPDATE_SEARCH_RESULT';
   payload: {
     results: SearchResult[];
+    place: string;
   };
 }
 
-export function updateSearchResult(results: SearchResult[]): UpdateSearchResult {
+export function updateSearchResult(results: SearchResult[], place: string): UpdateSearchResult {
   return {
     type: 'UPDATE_SEARCH_RESULT',
     payload: {
-      results
+      results,
+      place
     }
   };
 }
@@ -91,6 +93,60 @@ export function updateSearchError(message: string): UpdateSearchError {
     type: 'UPDATE_SEARCH_ERROR',
     payload: {
       message
+    }
+  };
+}
+
+interface GoogleGeometry {
+  location: {
+    lat: number;
+    lng: number;
+  };
+}
+
+interface GooglePlace {
+  name: string;
+  geometry: GoogleGeometry;
+  photos: Array<{ photo_reference: string; }>;
+}
+
+interface GoogleSite extends GooglePlace {
+  rating: number;
+}
+
+export interface ResultDetail {
+  pointsOfInterest: GoogleSite[];
+  details: GooglePlace;
+}
+
+export interface UpdateSearchResultDetail {
+  type: 'UPDATE_SEARCH_RESULT_DETAILS';
+  payload: {
+    details: { [key: string]: ResultDetail };
+  };
+}
+
+export function updateSearchResultDetail(details: { [key: string]: ResultDetail }): UpdateSearchResultDetail {
+  return {
+    type: 'UPDATE_SEARCH_RESULT_DETAILS',
+    payload: {
+      details
+    }
+  };
+}
+
+export interface LoadMoreDetails {
+  type: 'LOAD_MORE_DETAILS';
+  payload: {
+    idx: number;
+  };
+}
+
+export function loadMoreDetails(idx: number): LoadMoreDetails {
+  return {
+    type: 'LOAD_MORE_DETAILS',
+    payload: {
+      idx
     }
   };
 }

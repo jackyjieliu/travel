@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { State } from '../reducers';
+import { State } from '../reducers/state';
 import { updateSearchTerm, updateDays } from '../actions/search-action';
 import SearchInput from './parts/SearchInput';
 import SearchButton from './parts/SearchButton';

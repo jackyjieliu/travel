@@ -1,21 +1,26 @@
-import { SearchResult } from '../actions/search-action';
+import { SearchResult, ResultDetail } from '../actions/search-action';
 import * as React from 'react';
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card';
 import * as _ from 'lodash';
 import FlatButton from 'material-ui/FlatButton';
 import { GridList, GridTile } from 'material-ui/GridList';
 
-const Result = (props: {result: SearchResult}) => {
-  const { name, intro, imageUrl, pointsOfInterest } = props.result;
+const Result = (props: {result: SearchResult, detail?: ResultDetail}) => {
+  const { name } = props.result;
+
+  const { pointsOfInterest } = props.detail || { pointsOfInterest: undefined };
+  const formattedName = name.split(',').slice(0, 2).join(', ');
 
   const interestsEl = _.map(pointsOfInterest, (pointOfInterest, i) => {
+    const photoReference = _.get(pointOfInterest, 'photos[0].photo_reference');
     return (
       <GridTile
+        style={{ width: 300, minWidth: 300 }}
         key={i}
         title={pointOfInterest.name}
         titleBackground="linear-gradient(to top, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
       >
-        <img src={pointOfInterest.imageUrl} />
+        {photoReference ? <img src={'/api/images/' + photoReference} /> : undefined}
       </GridTile>
     );
   });
@@ -24,14 +29,8 @@ const Result = (props: {result: SearchResult}) => {
     <Card>
       <CardHeader
         titleStyle={{ fontSize: 18 }}
-        title={name}
-        avatar={imageUrl}
+        title={formattedName}
       />
-      <CardText
-        style={{ fontSize: 15, lineHeight: 1.5 }}
-      >
-        {intro}
-      </CardText>
       <CardText>
         <GridList style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', }} cols={2.2}>
           {interestsEl}
