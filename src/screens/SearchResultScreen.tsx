@@ -81,7 +81,7 @@ class SearchResultScreen extends React.Component<StateProps & RouterProps & Disp
         {spinner}
         {title}
         {results}
-        <div style={{ display: 'flex', position: 'relative', justifyContent: 'center', minHeight: 36 }}>
+        <div style={{ display: 'flex', position: 'relative', justifyContent: 'center', minHeight: 36, height: 36 }}>
           {loadMoreButton}
           {smallSpinner}
         </div>
