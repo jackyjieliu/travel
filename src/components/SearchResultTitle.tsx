@@ -1,6 +1,8 @@
 import * as React from 'react';
 
-const SearchResultTitle = (props: { place: string; days: number | undefined; query: string; }) => {
+const SearchResultTitle = (props: { place: string; days: number | undefined;
+  query: string; error?: boolean; }) => {
+
   if (props.place) {
     const displayPlaceArr = props.place.split(',');
     displayPlaceArr.pop();
@@ -11,6 +13,8 @@ const SearchResultTitle = (props: { place: string; days: number | undefined; que
         <div>How About:</div>
       </h3>
     );
+  } else if (props.error) {
+    return (<h3>Sorry. Something went wrong. Please try again later.</h3>);
   } else {
     return (<h3>Sorry. We counld not find the city {props.query}</h3>);
   }

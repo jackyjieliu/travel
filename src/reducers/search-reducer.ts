@@ -1,6 +1,5 @@
 
-import { UpdateSearchTerm, ClearSearchTerm, UpdateDays, StartSearch,
-  UpdateSearchResult, UpdateSearchError } from '../actions/search-action';
+import { AllSearchActions } from '../actions/search-action';
 import 'rxjs';
 
 export interface SearchState {
@@ -13,10 +12,7 @@ const INITIAL_STATE: SearchState = {
   days: undefined,
 };
 
-type SearchAction = UpdateSearchTerm | ClearSearchTerm | UpdateDays | StartSearch |
-  UpdateSearchResult | UpdateSearchError;
-
-export default function searchReducer(state: SearchState = INITIAL_STATE, action: SearchAction): SearchState {
+export default function searchReducer(state: SearchState = INITIAL_STATE, action: AllSearchActions): SearchState {
   let newState = state;
   switch (action.type) {
     case 'UPDATE_SEARCH_TERM':

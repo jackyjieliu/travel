@@ -1,7 +1,6 @@
 
-import { StartSearch, UpdateSearchResultDetail, ResultDetail, updateSearchResultDetail, LoadMoreDetails,
-  loadMoreDetails, UpdateSearchResult, updateSearchResult, UpdateSearchError, updateSearchError
-  } from '../actions/search-action';
+import { AllSearchActions,  ResultDetail, updateSearchResultDetail, LoadMoreDetails,
+  loadMoreDetails, updateSearchResult, updateSearchError, errorLoadingDetails } from '../actions/search-action';
 import { combineEpics, Epic } from 'redux-observable';
 import { Observable } from 'rxjs/Observable';
 import * as queryString from 'query-string';
@@ -10,9 +9,7 @@ import * as _ from 'lodash';
 
 import 'rxjs';
 
-type EpicActions = StartSearch | UpdateSearchResult | UpdateSearchError | UpdateSearchResultDetail | LoadMoreDetails;
-
-const searchEpic: Epic<EpicActions, State> = (action$, store) =>
+const searchEpic: Epic<AllSearchActions, State> = (action$, store) =>
   action$
     .ofType('START_SEARCH')
     .map((action) => {
@@ -25,24 +22,24 @@ const searchEpic: Epic<EpicActions, State> = (action$, store) =>
     .switchMap((params) =>
       Observable.ajax.getJSON('/api/places?' + queryString.stringify(params))
         .catch((err) => {
-          return Observable.of({ locations: [], place: '' });
+          return Observable.of({ locations: [], place: '', error: true });
         })
     )
-    .map((results: { locations: Array<any>; place: string; }) => {
+    .map((results: { locations: Array<any>; place: string; error?: boolean; }) => {
+      if (results.error) {
+        return updateSearchError();
+      }
       return updateSearchResult(results.locations, results.place);
-    })
-    .catch(() => {
-      return Observable.of(updateSearchError('Something went wrong'));
     });
 
-const initialSearchDetailEpic: Epic<EpicActions, State> = (action$, store) =>
+const initialSearchDetailEpic: Epic<AllSearchActions, State> = (action$, store) =>
   action$
     .ofType('UPDATE_SEARCH_RESULT')
     .map(() => {
       return loadMoreDetails(0);
     });
 
-const loadMoreSearchDetails: Epic<LoadMoreDetails | UpdateSearchResultDetail, State> = (action$, store) =>
+const loadMoreSearchDetails: Epic<AllSearchActions, State> = (action$, store) =>
   action$
     .ofType('LOAD_MORE_DETAILS')
     .map((action: LoadMoreDetails) => {
@@ -64,10 +61,13 @@ const loadMoreSearchDetails: Epic<LoadMoreDetails | UpdateSearchResultDetail, St
     .switchMap((missingDetails) =>
       Observable.ajax.getJSON('/api/places/details?' + queryString.stringify({ places: missingDetails }))
         .catch((err) => {
-          return Observable.of({ locations: [] });
+          return Observable.of({ locations: [], error: true });
         })
     )
-    .map((results: { locations: Array<ResultDetail & { name: string }> }) => {
+    .map((results: { locations: Array<ResultDetail & { name: string }>, error?: boolean; }) => {
+      if (results.error) {
+        return errorLoadingDetails();
+      }
       const obj = {};
       _.each(results.locations, (location) => {
         const name = location.name;

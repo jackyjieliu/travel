@@ -1,3 +1,6 @@
+export type AllSearchActions = UpdateSearchTerm | UpdateDays | ClearSearchTerm | StartSearch | UpdateSearchResult |
+  UpdateSearchError | LoadMoreDetails | ErrorLoadingDetails | UpdateSearchResultDetail;
+
 export interface UpdateSearchTerm {
   type: 'UPDATE_SEARCH_TERM';
   payload: {
@@ -54,9 +57,10 @@ export function startSearch(): StartSearch {
 }
 
 export interface SearchResult {
+  id: string;
   name: string;
-  imageUrl: string;
-  intro?: string;
+  // imageUrl: string;
+  // intro?: string;
   pointsOfInterest: Array<{
     name: string;
     imageUrl?: string;
@@ -83,17 +87,13 @@ export function updateSearchResult(results: SearchResult[], place: string): Upda
 
 export interface UpdateSearchError {
   type: 'UPDATE_SEARCH_ERROR';
-  payload: {
-    message: string;
-  };
+  payload: {};
 }
 
-export function updateSearchError(message: string): UpdateSearchError {
+export function updateSearchError(): UpdateSearchError {
   return {
     type: 'UPDATE_SEARCH_ERROR',
-    payload: {
-      message
-    }
+    payload: {}
   };
 }
 
@@ -148,5 +148,17 @@ export function loadMoreDetails(idx: number): LoadMoreDetails {
     payload: {
       idx
     }
+  };
+}
+
+export interface ErrorLoadingDetails {
+  type: 'UPDATE_SEARCH_RESULT_DETAILS_ERROR';
+  payload: {};
+}
+
+export function errorLoadingDetails(): ErrorLoadingDetails {
+  return {
+    type: 'UPDATE_SEARCH_RESULT_DETAILS_ERROR',
+    payload: {}
   };
 }

@@ -1,11 +1,11 @@
 
-import { StartSearch, SearchResult, ResultDetail, UpdateSearchResultDetail, LoadMoreDetails,
-  UpdateSearchResult, UpdateSearchError } from '../actions/search-action';
+import { AllSearchActions, SearchResult, ResultDetail } from '../actions/search-action';
 
 export interface SearchResultsState {
   searching: boolean;
   loadingDetails: boolean;
-  errorMessage: string;
+  errorLoadingResults: boolean;
+  errorLoadingDetails: boolean;
 
   // This is what the server things the user searched.
   // May be different from the user input
@@ -19,15 +19,14 @@ const INITIAL_STATE: SearchResultsState = {
   results: [],
   resultDetail: {},
   travelingFrom: '',
-  errorMessage: '',
+  errorLoadingResults: false,
+  errorLoadingDetails: false,
   loadingDetails: false
 };
 
-type SearchAction = StartSearch | UpdateSearchResult | UpdateSearchError | UpdateSearchResultDetail | LoadMoreDetails;
-
 export default function searchResultsReducer(
     state: SearchResultsState = INITIAL_STATE,
-    action: SearchAction
+    action: AllSearchActions
   ): SearchResultsState {
 
   let newState = state;
@@ -44,7 +43,7 @@ export default function searchResultsReducer(
         searching: false,
         results: action.payload.results,
         travelingFrom: action.payload.place,
-        errorMessage: ''
+        errorLoadingResults: false
       };
       break;
     case 'UPDATE_SEARCH_ERROR':
@@ -53,17 +52,25 @@ export default function searchResultsReducer(
         searching: false,
         results: [],
         travelingFrom: '',
-        errorMessage: action.payload.message
+        errorLoadingResults: true
       };
       break;
     case 'UPDATE_SEARCH_RESULT_DETAILS':
       newState = {
         ...state,
         loadingDetails: false,
+        errorLoadingDetails: false,
         resultDetail: {
           ...state.resultDetail,
           ...action.payload.details
         }
+      };
+      break;
+    case 'UPDATE_SEARCH_RESULT_DETAILS_ERROR':
+      newState = {
+        ...state,
+        loadingDetails: false,
+        errorLoadingDetails: true
       };
       break;
     case 'LOAD_MORE_DETAILS':

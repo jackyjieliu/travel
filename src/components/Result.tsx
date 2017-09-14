@@ -1,15 +1,39 @@
 import { SearchResult, ResultDetail } from '../actions/search-action';
 import * as React from 'react';
 import { Card, CardText, CardTitle,
-  // CardActions
+  CardActions
 } from 'material-ui/Card';
 import * as _ from 'lodash';
-// import FlatButton from 'material-ui/FlatButton';
+import FlatButton from 'material-ui/FlatButton';
 import { GridList, GridTile } from 'material-ui/GridList';
 import Map from './Map';
+import * as H from 'history';
+import { withRouter } from 'react-router-dom';
 
-class Result extends React.Component<{result: SearchResult, detail: ResultDetail}> {
+interface RouterProps {
+  history: H.History;
+}
+
+interface OwnProps {
+  result: SearchResult;
+  detail: ResultDetail;
+}
+
+class Result extends React.Component<OwnProps & RouterProps> {
   public mapRef: any;
+
+  constructor() {
+    super();
+    this.seeDetails = this.seeDetails.bind(this);
+  }
+
+  seeDetails(id: string, name: string) {
+    return () => {
+      this.props.history.push({
+        pathname: '/place/' + id + '/' + name
+      });
+    };
+  }
 
   render() {
     const props = this.props;
@@ -88,6 +112,9 @@ class Result extends React.Component<{result: SearchResult, detail: ResultDetail
             {interestsEl}
           </GridList>
         </CardText>
+        <CardActions>
+          <FlatButton label="See Details" onClick={this.seeDetails(this.props.result.id, this.props.result.name)}/>
+        </CardActions>
       </Card>
     );
   }
@@ -97,4 +124,4 @@ class Result extends React.Component<{result: SearchResult, detail: ResultDetail
   <FlatButton label="Plan My Trip" />
   <FlatButton label="Not Interested" />
 </CardActions>*/}
-export default Result;
+export default withRouter(Result) as React.ComponentType<OwnProps>;

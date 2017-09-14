@@ -17,6 +17,8 @@ interface StateProps {
   results: SearchResult[];
   resultDetail: { [key: string]: ResultDetail };
   travelingFrom: string;
+  errorLoadingDetails: boolean;
+  errorLoadingResults: boolean;
   days: number | undefined;
   query: string;
 }
@@ -49,6 +51,7 @@ class SearchResultScreen extends React.Component<StateProps & RouterProps & Disp
     let spinner;
     let smallSpinner;
     let results;
+    let errorMessage;
     let title;
     let loadMoreButton;
 
@@ -63,17 +66,29 @@ class SearchResultScreen extends React.Component<StateProps & RouterProps & Disp
             <Result result={result} detail={detail}/>
           </div>);
       });
-      title = (<SearchResultTitle place={this.props.travelingFrom} days={this.props.days} query={this.props.query}/>);
+      title = (
+        <SearchResultTitle
+          place={this.props.travelingFrom}
+          days={this.props.days}
+          query={this.props.query}
+          error={this.props.errorLoadingResults}
+        />);
     }
 
     if (!results || results.length === 0) {
-      spinner = (<Spinner/>);
+      if (!this.props.errorLoadingResults)  {
+        spinner = (<Spinner/>);
+      }
     } else {
       if (this.props.loadingDetails) {
         smallSpinner = (<Spinner type="small" marginTop={0} />);
       } else if (results.length < this.props.results.length) {
         loadMoreButton = (<RaisedButton onClick={this.loadMore.bind(this, results.length)}>Load More</RaisedButton>);
       }
+    }
+
+    if (!this.props.loadingDetails && !this.props.errorLoadingResults && this.props.errorLoadingDetails) {
+      errorMessage = (<div>Sorry. Something went wrong. Please try again later</div>);
     }
 
     return (
@@ -84,6 +99,7 @@ class SearchResultScreen extends React.Component<StateProps & RouterProps & Disp
         <div style={{ display: 'flex', position: 'relative', justifyContent: 'center', minHeight: 36, height: 36 }}>
           {loadMoreButton}
           {smallSpinner}
+          {errorMessage}
         </div>
       </div>
     );
@@ -97,6 +113,8 @@ function mapStateToProps(store: State): StateProps {
     results: store.searchResults.results,
     travelingFrom: store.searchResults.travelingFrom,
     resultDetail: store.searchResults.resultDetail,
+    errorLoadingDetails: store.searchResults.errorLoadingDetails,
+    errorLoadingResults: store.searchResults.errorLoadingResults,
     days: store.search.days,
     query: store.search.query
   };
