@@ -1,6 +1,6 @@
 import { SearchResult, ResultDetail } from '../actions/search-action';
 import * as React from 'react';
-import { Card, CardText,
+import { Card, CardText, CardTitle,
   // CardActions
 } from 'material-ui/Card';
 import * as _ from 'lodash';
@@ -21,14 +21,12 @@ class Result extends React.Component<{result: SearchResult, detail: ResultDetail
     // const self = this;
     const onMouseEnterTile = (i: number, coord: { lat: number; lng: number;}) => {
       return () => {
-        console.log('enter ' + i);
         this.mapRef.showTooltip(i, coord);
       };
     };
 
     const onMouseLeaveTile = (i: number) => {
       return () => {
-        console.log('leave ' + i);
         this.mapRef.hideTooltip(i);
       };
     };
@@ -44,7 +42,7 @@ class Result extends React.Component<{result: SearchResult, detail: ResultDetail
           key={i}
           onMouseEnter={onMouseEnterTile(i, coord)}
           onMouseLeave={onMouseLeaveTile(i)}
-          style={{ width: 300, height: 180 }}
+          style={{ width: 300, height: 180, cursor: 'default' }}
         >
           <GridTile
             key={i}
@@ -67,12 +65,12 @@ class Result extends React.Component<{result: SearchResult, detail: ResultDetail
     });
 
     return (
-      <Card style={{ width: 760 }}>
-        <CardText style={{ fontSize: 22, paddingBottom: 0 }}>
-          {formattedName}
-        </CardText>
+      <Card style={{ width: 760 }} containerStyle={{ paddingBottom: 0 }}>
+        <CardTitle
+          title={formattedName}
+        />
         <CardText>
-          <div style={{ width: 382, height: 412, display: 'inline-block' }}>
+          <div style={{ width: 430, height: 412, display: 'inline-block' }}>
             <Map
               ref={(ref) => { this.mapRef = ref || this.mapRef; }}
               defaultZoom={11}
