@@ -107,10 +107,17 @@ class SearchResultScreen extends React.Component<StateProps & RouterProps & Disp
 }
 
 function mapStateToProps(store: State): StateProps {
+  const results = store.searchResults.results;
+  const resultsOrder = store.searchResults.resultsOrder;
+
   return {
     searching: store.searchResults.searching,
     loadingDetails: store.searchResults.loadingDetails,
-    results: store.searchResults.results,
+    results: resultsOrder.map((id) => {
+      return results[id];
+    }).filter((value) => {
+      return value !== false;
+    }) as SearchResult[],
     travelingFrom: store.searchResults.travelingFrom,
     resultDetail: store.searchResults.resultDetail,
     errorLoadingDetails: store.searchResults.errorLoadingDetails,

@@ -3,7 +3,7 @@ import './App.css';
 import { Switch, Route } from 'react-router-dom';
 import LandingScreen from './screens/LandingScreen';
 import SearchResultScreen from './screens/SearchResultScreen';
-import DestinationDetail from './screens/DestinationDetailScreen';
+import DestinationDetailScreen from './screens/DestinationDetailScreen';
 import Header from './components/Header';
 
 const bodyWrapper = (Component: React.ComponentClass) => {
@@ -21,7 +21,7 @@ const App = () => {
       <Switch>
         <Route exact={true} path="/" component={LandingScreen}/>
         <Route path="/search" component={bodyWrapper(SearchResultScreen)}/>
-        <Route path="/destination" component={bodyWrapper(DestinationDetail)}/>
+        <Route path="/place/:id" component={bodyWrapper(DestinationDetailScreen)}/>
       </Switch>
     </div>
   );

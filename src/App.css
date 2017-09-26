@@ -1,3 +1,7 @@
 .__react_component_tooltip.type-dark.place-top:after {
   display: none;
 }
+
+.carousel.carousel-slider .control-arrow  {
+  background: rgba(0,0,0,.2) !important;
+}

@@ -19,9 +19,11 @@ class Marker extends React.Component<{ text: string; lat: number; lng: number; r
 
   showTooltip() {
     if (this.tooltipRef) {
-      setImmediate(() => {
-        (ReactTooltip as any).show(this.tooltipRef);
-      });
+      setTimeout(
+        () => {
+          (ReactTooltip as any).show(this.tooltipRef);
+        },
+        300);
     }
   }
 

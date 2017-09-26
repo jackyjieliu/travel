@@ -1,5 +1,37 @@
-export type AllSearchActions = UpdateSearchTerm | UpdateDays | ClearSearchTerm | StartSearch | UpdateSearchResult |
-  UpdateSearchError | LoadMoreDetails | ErrorLoadingDetails | UpdateSearchResultDetail;
+export type AllSearchActions = UpdateSearchTerm | UpdateDays | ClearSearchTerm | StartSearch |
+  LoadMoreDetails | FetchPlaceWithId;
+
+export interface ResultPhotos {
+  photos: string[];
+}
+
+export interface GoogleGeometry {
+  location: {
+    lat: number;
+    lng: number;
+  };
+}
+
+export interface GooglePlace {
+  geometry: GoogleGeometry;
+  photos: Array<{ photo_reference: string; }>;
+}
+
+export interface GoogleSite extends GooglePlace {
+  rating: number;
+  name: string;
+}
+
+export interface ResultDetail extends ResultPhotos {
+  name: string;
+  pointsOfInterest: GoogleSite[];
+  details: GooglePlace;
+}
+
+export interface SearchResult {
+  id: string;
+  name: string;
+}
 
 export interface UpdateSearchTerm {
   type: 'UPDATE_SEARCH_TERM';
@@ -56,85 +88,6 @@ export function startSearch(): StartSearch {
   };
 }
 
-export interface SearchResult {
-  id: string;
-  name: string;
-  // imageUrl: string;
-  // intro?: string;
-  pointsOfInterest: Array<{
-    name: string;
-    imageUrl?: string;
-  }>;
-}
-
-export interface UpdateSearchResult {
-  type: 'UPDATE_SEARCH_RESULT';
-  payload: {
-    results: SearchResult[];
-    place: string;
-  };
-}
-
-export function updateSearchResult(results: SearchResult[], place: string): UpdateSearchResult {
-  return {
-    type: 'UPDATE_SEARCH_RESULT',
-    payload: {
-      results,
-      place
-    }
-  };
-}
-
-export interface UpdateSearchError {
-  type: 'UPDATE_SEARCH_ERROR';
-  payload: {};
-}
-
-export function updateSearchError(): UpdateSearchError {
-  return {
-    type: 'UPDATE_SEARCH_ERROR',
-    payload: {}
-  };
-}
-
-interface GoogleGeometry {
-  location: {
-    lat: number;
-    lng: number;
-  };
-}
-
-interface GooglePlace {
-  name: string;
-  geometry: GoogleGeometry;
-  photos: Array<{ photo_reference: string; }>;
-}
-
-interface GoogleSite extends GooglePlace {
-  rating: number;
-}
-
-export interface ResultDetail {
-  pointsOfInterest: GoogleSite[];
-  details: GooglePlace;
-}
-
-export interface UpdateSearchResultDetail {
-  type: 'UPDATE_SEARCH_RESULT_DETAILS';
-  payload: {
-    details: { [key: string]: ResultDetail };
-  };
-}
-
-export function updateSearchResultDetail(details: { [key: string]: ResultDetail }): UpdateSearchResultDetail {
-  return {
-    type: 'UPDATE_SEARCH_RESULT_DETAILS',
-    payload: {
-      details
-    }
-  };
-}
-
 export interface LoadMoreDetails {
   type: 'LOAD_MORE_DETAILS';
   payload: {
@@ -151,14 +104,18 @@ export function loadMoreDetails(idx: number): LoadMoreDetails {
   };
 }
 
-export interface ErrorLoadingDetails {
-  type: 'UPDATE_SEARCH_RESULT_DETAILS_ERROR';
-  payload: {};
+export interface FetchPlaceWithId {
+  type: 'FETCH_PLACE_WITH_ID';
+  payload: {
+    id: string;
+  };
 }
 
-export function errorLoadingDetails(): ErrorLoadingDetails {
+export function fetchPlaceWithId(id: string): FetchPlaceWithId {
   return {
-    type: 'UPDATE_SEARCH_RESULT_DETAILS_ERROR',
-    payload: {}
+    type: 'FETCH_PLACE_WITH_ID',
+    payload: {
+      id
+    }
   };
 }
